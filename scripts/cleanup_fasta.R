@@ -30,8 +30,8 @@ prediction_scores <-
        names(fasta_input)) %>%
   str_split(" ", simplify = T) %>% 
   data.frame() %>% 
-  rename(Protein_ID=X1,
-         score=X2) %>% 
+  rename(X1="Protein_ID",
+         X2="score") %>% 
   mutate(score = as.numeric(score),
          gene_ID = gsub("(_i\\d+)*.p\\d+" , "", Protein_ID))
 
@@ -69,7 +69,8 @@ names(selected_proteins) <-
 
 writeXStringSet(selected_proteins, 
                 filepath = "results/Amaryllidaceae_BBEs.fasta", 
-                format = "fasta", width = 1000000000)
+                format = "fasta", width = 100000) # maximum width=200001
+
 
 #### Ouvrir le fichier fasta  de Uniprot####
 # To open a fasta file with multiple sequences, use the function readDNAStringSet() or readAAStringSet()
@@ -94,11 +95,6 @@ fasta_amaryllidaceae = "results/Amaryllidaceae_BBEs.fasta" %>%
 fasta_input_characterized = "results/Characterized_BBEs.fasta" %>%
   readAAStringSet(format = "fasta")
 
-writeXStringSet(fasta_amaryllidaceae, 
+writeXStringSet(c(fasta_amaryllidaceae, fasta_input_characterized), 
                 filepath = "results/Combined_fasta.fa",
-                format = "fasta", width=10000)
-
-
-writeXStringSet(fasta_input_characterized, 
-                filepath = "results/Combined_fasta.fa",append = T,
                 format = "fasta", width=10000)
