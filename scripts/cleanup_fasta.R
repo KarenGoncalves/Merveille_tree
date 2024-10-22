@@ -80,7 +80,7 @@ names(fasta_input)
 
 #### Clean up names and get best sequences per gene ####
 names(fasta_input) <- 
-  gsub("^sp\\|[A-Z0-9\\.]+\\|([A-Z0-9_]+) .+", "\\1", names(fasta_input))
+  gsub("^sp\\|[A-Z0-9\\.\\-]+\\|([A-Z0-9_]+) .+", "\\1", names(fasta_input))
 #### Create a subset of the fasta file with only the selected proteins ####
 # grep is like CTRL+F: searches for a text
 
@@ -95,6 +95,8 @@ fasta_amaryllidaceae = "results/Amaryllidaceae_BBEs.fasta" %>%
 fasta_input_characterized = "results/Characterized_BBEs.fasta" %>%
   readAAStringSet(format = "fasta")
 
-writeXStringSet(c(fasta_amaryllidaceae, fasta_input_characterized), 
-                filepath = "results/Combined_fasta.fa",
+c(fasta_amaryllidaceae, fasta_input_characterized) %>% 
+  gsub("*", "", fixed = T, .) %>% #remove stop codons
+  AAStringSet() %>% 
+writeXStringSet(filepath = "results/Combined_fasta.fa",
                 format = "fasta", width=10000)
